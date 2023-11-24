@@ -28,3 +28,7 @@ def stock_dashboard():
         fig = create_stock_graph(df, ticker)
         graphJSON = json.dumps(fig, cls=px.utils.PlotlyJSONEncoder)
     return render_template('dashboard.html', graphJSON=graphJSON)
+
+# Run the Flask application
+if __name__ == '__main__':
+    app.run(debug=True)
