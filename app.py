@@ -17,3 +17,14 @@ def fetch_stock_data(ticker):
 def create_stock_graph(df, ticker):
     fig = px.line(df, x=df.index, y='Close', title=f'Stock Price of {ticker}')
     return fig
+
+# Route for the stock dashboard
+@app.route('/', methods=['GET', 'POST'])
+def stock_dashboard():
+    graphJSON = ''
+    if request.method == 'POST':
+        ticker = request.form.get('stockTicker')
+        df = fetch_stock_data(ticker)
+        fig = create_stock_graph(df, ticker)
+        graphJSON = json.dumps(fig, cls=px.utils.PlotlyJSONEncoder)
+    return render_template('dashboard.html', graphJSON=graphJSON)
