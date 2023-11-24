@@ -12,3 +12,8 @@ def fetch_stock_data(ticker):
     stock = yf.Ticker(ticker)
     hist = stock.history(period="1mo")
     return hist
+
+# Function to create stock graph
+def create_stock_graph(df, ticker):
+    fig = px.line(df, x=df.index, y='Close', title=f'Stock Price of {ticker}')
+    return fig
