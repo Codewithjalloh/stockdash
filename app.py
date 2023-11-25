@@ -1,17 +1,26 @@
 from flask import Flask, render_template, request
 import pandas as pd
-import yfinance as yf
+from alpha_vantage.timeseries import TimeSeries
 import plotly.express as px
 import json
 
 # Initialize Flask app
 app = Flask(__name__)
 
+# Alpha Vantage API Key (replace 'YOUR_API_KEY' with your actual API key)
+ALPHA_VANTAGE_API_KEY = 'YOUR_API_KEY'
+
 # Function to fetch stock data
 def fetch_stock_data(ticker):
-    stock = yf.Ticker(ticker)
-    hist = stock.history(period="1mo")
-    return hist
+    ts = TimeSeries(key=ALPHA_VANTAGE_API_KEY, output_format='pandas')
+    data, meta_data = ts.get_daily(ticker, outputsize='compact')
+    # Renaming the columns for consistency
+    data.rename(columns={
+        '1. open': 'Open', '2. high': 'High', 
+        '3. low': 'Low', '4. close': 'Close', 
+        '5. volume': 'Volume'
+    }, inplace=True)
+    return data
 
 # Function to create stock graph
 def create_stock_graph(df, ticker):
